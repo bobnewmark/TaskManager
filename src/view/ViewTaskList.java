@@ -1,11 +1,7 @@
 package view;
 
-import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.event.*;
-import org.apache.*;
-import org.apache.logging.log4j.Logger;
+import java.awt.*;
 
 public class ViewTaskList extends JPanel {
     private JList jlist;
