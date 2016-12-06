@@ -1,5 +1,6 @@
 package controller;
 
+import org.apache.log4j.*;
 import view.ViewTaskList;
 import view.ViewTaskListEdit;
 
@@ -7,6 +8,8 @@ import javax.swing.*;
 
 public class MainController {
 
+
+    final static Logger logger = Logger.getLogger(MainController.class.getClass());
 
     public static void main(String[] args) {
         ViewTaskList view = new ViewTaskList();
@@ -16,6 +19,8 @@ public class MainController {
         frame.pack();
         frame.setVisible(true);
         new AppController(view);
+        logger.debug("Launch successful");
+        //System.out.println(System.getProperty("java.class.path"));
     }
 
 //    public static void main(String[] args) {
