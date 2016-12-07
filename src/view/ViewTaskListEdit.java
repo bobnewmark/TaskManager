@@ -1,51 +1,60 @@
 package view;
 
-import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
 
+public class ViewTaskListEdit extends JFrame {
 
-public class ViewTaskListEdit extends JPanel {
-    private JList jList;
-    private JButton addTaskButton;
-    private JButton removeTaskButton;
-    private JButton editTaskButton;
-    private JButton exitButton;
-    private JLabel label;
+    private JPanel contentPane;
 
-
+    /**
+     * Create the frame.
+     */
     public ViewTaskListEdit() {
-        //construct preComponents
-        String[] jListItems = {"Item 1", "Item 2", "Item 3"};
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setBounds(100, 100, 450, 300);
+        contentPane = new JPanel();
+        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+        setContentPane(contentPane);
+        contentPane.setLayout(new BorderLayout(0, 0));
 
-        //construct components
-        jList = new JList(jListItems);
-        addTaskButton = new JButton("Add");
-        removeTaskButton = new JButton("Remove");
-        exitButton = new JButton("Exit");
-        label = new JLabel("Task List");
-        editTaskButton = new JButton("Edit");
+        JLabel lblNewLabel = new JLabel("Task List Editor");
+        lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        contentPane.add(lblNewLabel, BorderLayout.NORTH);
 
-        //adjust size and set layout
-        setPreferredSize(new Dimension(620, 381));
-        setLayout(null);
+        JList list = new JList();
+        contentPane.add(list, BorderLayout.CENTER);
 
-        //add components
-        add(jList);
-        add(addTaskButton);
-        add(removeTaskButton);
-        add(exitButton);
-        add(label);
-        add(editTaskButton);
+        JPanel panel = new JPanel();
+        contentPane.add(panel, BorderLayout.SOUTH);
 
-        //set component bounds (only needed by Absolute Positioning)
-        jList.setBounds(55, 45, 515, 235);
-        addTaskButton.setBounds(55, 305, 115, 40);
-        removeTaskButton.setBounds(188, 305, 115, 40);
-        exitButton.setBounds(455, 305, 115, 40);
-        label.setBounds(275, 10, 65, 25);
-        editTaskButton.setBounds(322, 305, 115, 40);
+        JButton btnNewButton = new JButton("Add New");
+        panel.add(btnNewButton);
+
+        JButton btnNewButton_1 = new JButton("Remove");
+        panel.add(btnNewButton_1);
+
+        JButton btnNewButton_2 = new JButton("Back");
+        panel.add(btnNewButton_2);
+    }
+
+    /**
+     * Launch the application.
+     */
+    public static void main(String[] args) {
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    ViewTaskListEdit frame = new ViewTaskListEdit();
+                    frame.setTitle("Task Manager");
+                    frame.setMinimumSize(new Dimension(450, 300));
+                    frame.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
 }

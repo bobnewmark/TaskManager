@@ -47,7 +47,7 @@ public class ViewNotification extends JFrame {
         contentPane.setLayout(new BorderLayout(0, 0));
         setContentPane(contentPane);
 
-        JLabel lblNewLabel = new JLabel("It is time for a following task now:");
+        JLabel lblNewLabel = new JLabel("It is time now for a following task:");
         lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
         contentPane.add(lblNewLabel, BorderLayout.NORTH);
 
