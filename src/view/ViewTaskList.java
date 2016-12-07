@@ -1,45 +1,60 @@
 package view;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
-public class ViewTaskList extends JPanel {
-    private JList jlist;
-    private JButton calendarButton;
-    private JButton editListButton;
-    private JButton exitButton;
-    private JLabel label;
+public class ViewTaskList extends JFrame {
 
-    //static Logger logger = Logger(ViewTaskList.getClass());
+    private JPanel contentPane;
 
+    /**
+     * Create the frame.
+     */
     public ViewTaskList() {
-        //construct preComponents
-        String[] jlistItems = {"Item 1", "Item 2", "Item 3"};
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setBounds(100, 100, 450, 300);
+        contentPane = new JPanel();
+        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+        setContentPane(contentPane);
+        contentPane.setLayout(new BorderLayout(0, 0));
 
-        //construct components
-        jlist = new JList (jlistItems);
-        calendarButton = new JButton ("Calendar");
-        editListButton = new JButton ("Edit List");
-        exitButton = new JButton ("Exit");
-        label = new JLabel ("Task List");
+        JLabel lblNewLabel = new JLabel("My task list");
+        lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        contentPane.add(lblNewLabel, BorderLayout.NORTH);
 
-        //adjust size and set layout
-        setPreferredSize (new Dimension (624, 391));
-        setLayout (null);
+        JList list = new JList();
+        contentPane.add(list, BorderLayout.CENTER);
 
-        //add components
-        add (jlist);
-        add (calendarButton);
-        add (editListButton);
-        add (exitButton);
-        add (label);
+        JPanel panel = new JPanel();
+        contentPane.add(panel, BorderLayout.SOUTH);
 
-        //set component bounds (only needed by Absolute Positioning)
-        jlist.setBounds (55, 45, 515, 235);
-        calendarButton.setBounds (55, 305, 130, 40);
-        editListButton.setBounds (245, 305, 130, 40);
-        exitButton.setBounds (440, 305, 130, 40);
-        label.setBounds (275, 10, 65, 25);
+        JButton btnNewButton = new JButton("Calendar");
+        panel.add(btnNewButton);
+
+        JButton btnNewButton_1 = new JButton("Edit List");
+        panel.add(btnNewButton_1);
+
+        JButton btnNewButton_2 = new JButton("Exit");
+        panel.add(btnNewButton_2);
+    }
+
+    /**
+     * Launch the application.
+     */
+    public static void main(String[] args) {
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    ViewTaskList frame = new ViewTaskList();
+                    frame.setTitle("Task Manager");
+                    frame.setMinimumSize(new Dimension(450, 300));
+                    frame.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
 }
