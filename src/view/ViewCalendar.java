@@ -14,23 +14,6 @@ public class ViewCalendar extends JFrame {
 
     private JPanel contentPane;
 
-    /**
-     * Launch the application.
-     */
-    public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    ViewCalendar frame = new ViewCalendar();
-                    frame.setTitle("Calendar");
-                    frame.setMinimumSize(new Dimension(450, 300));
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
 
     /**
      * Create the frame.

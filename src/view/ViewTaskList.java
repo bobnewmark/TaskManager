@@ -1,14 +1,20 @@
 package view;
 
 import controller.AppController;
+import model.ArrayTaskList;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class ViewTaskList extends JFrame {
 
     private JPanel contentPane;
+    private JLabel lblNewLabel;
+    DefaultListModel<String> model;
+    JList<String> list;
+
 
     /**
      * Create the frame.
@@ -24,11 +30,12 @@ public class ViewTaskList extends JFrame {
         setContentPane(contentPane);
         contentPane.setLayout(new BorderLayout(0, 0));
 
-        JLabel lblNewLabel = new JLabel("My task list");
+        lblNewLabel = new JLabel("My task list");
         lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
         contentPane.add(lblNewLabel, BorderLayout.NORTH);
 
-        JList list = new JList();
+        model = new DefaultListModel<>();
+        list = new JList<>( model );
         contentPane.add(list, BorderLayout.CENTER);
 
         JPanel panel = new JPanel();
@@ -50,27 +57,22 @@ public class ViewTaskList extends JFrame {
         setMinimumSize(new Dimension(450, 300));
         setLocationRelativeTo(null);
         setVisible(true);
+    }
 
+    //TODO: METHOD PROBABLY NEEDS A FIX, SEE LATER
+    public ArrayList<String> getList() {
+        ArrayList<String> temp = new ArrayList<>();
+        for (int i = 0; i < list.getModel().getSize(); i++) {
+            temp.add((String) list.getModel().getElementAt(i));
+        }
+        return temp;
     }
 
 
-    /**
-     * Launch the application.
-     */
-    public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    ViewTaskList frame = new ViewTaskList();
-                    frame.setTitle("Task Manager");
-                    frame.setMinimumSize(new Dimension(450, 300));
-                    frame.setLocationRelativeTo(null);
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
+    public void setList(ArrayTaskList arrayTaskList) {
+        for (int i = 0; i < arrayTaskList.size(); i++) {
+            model.addElement(arrayTaskList.getTask(i).toString());
+        }
 
+    }
 }

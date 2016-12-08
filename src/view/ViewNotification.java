@@ -17,24 +17,6 @@ public class ViewNotification extends JFrame {
     private JPanel contentPane;
     private JTextField textField;
 
-    /**
-     * Launch the application.
-     */
-    public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    ViewNotification frame = new ViewNotification();
-                    frame.setTitle("Reminder!");
-                    frame.setSize(400,200);
-                    frame.setResizable(false);
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
 
     /**
      * Create the frame.
