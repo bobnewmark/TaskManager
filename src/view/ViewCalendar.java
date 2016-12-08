@@ -1,5 +1,6 @@
 package view;
 
+import controller.AppController;
 import org.jdesktop.swingx.JXDatePicker;
 
 import java.awt.*;
@@ -35,6 +36,9 @@ public class ViewCalendar extends JFrame {
      * Create the frame.
      */
     public ViewCalendar() {
+
+        AppController engine = new AppController(this);
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 450, 300);
         contentPane = new JPanel();
@@ -57,7 +61,7 @@ public class ViewCalendar extends JFrame {
 
 
 
-        JPanel panel_for_pickers = new JPanel(new GridLayout(8, 1));
+        JPanel panel_for_pickers = new JPanel(new GridLayout(10, 1));
 //panel_for_pickers.setLayout(new BoxLayout(panel_for_pickers, BoxLayout.Y_AXIS));
         JXDatePicker picker = new JXDatePicker();
         picker.setDate(Calendar.getInstance().getTime());
@@ -75,14 +79,26 @@ public class ViewCalendar extends JFrame {
         panel_for_pickers.add(end);
         panel_for_pickers.add(picker2);
         panel_for_pickers.add(Box.createRigidArea(new Dimension(0,0)));
+
+        JButton buildButton = new JButton("View");
+        buildButton.addActionListener(engine);
+        buildButton.setPreferredSize(new Dimension(60, 40));
+        panel_for_pickers.add(buildButton);
+
+        panel_for_pickers.add(Box.createRigidArea(new Dimension(0,0)));
         panel_for_pickers.add(Box.createRigidArea(new Dimension(0,0)));
         panel_for_pickers.add(Box.createRigidArea(new Dimension(0,0)));
 
-        JButton btnNewButton = new JButton("Back");
-        btnNewButton.setPreferredSize(new Dimension(60, 40));
-        panel_for_pickers.add(btnNewButton);
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(engine);
+        backButton.setPreferredSize(new Dimension(60, 40));
+        panel_for_pickers.add(backButton);
         contentPane.add(panel_for_pickers, BorderLayout.EAST);
 
+        setTitle("Calendar");
+        setMinimumSize(new Dimension(450, 300));
+        setLocationRelativeTo(null);
+        setVisible(true);
 
 
 

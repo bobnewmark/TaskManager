@@ -1,13 +1,13 @@
 package view;
 
+import controller.AppController;
 import org.jdesktop.swingx.JXDatePicker;
-
-import java.awt.*;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class ViewTaskEdit extends JFrame {
 
@@ -15,28 +15,14 @@ public class ViewTaskEdit extends JFrame {
     private JTextField textField;
     private JTextField textField_1;
 
-    /**
-     * Launch the application.
-     */
-    public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    ViewTaskEdit frame = new ViewTaskEdit();
-                    frame.setTitle("Editing Task From List");
-                    frame.setMinimumSize(new Dimension(450, 300));
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
 
     /**
      * Create the frame.
      */
     public ViewTaskEdit() {
+
+        AppController engine = new AppController(this);
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 450, 300);
         contentPane = new JPanel();
@@ -80,6 +66,9 @@ public class ViewTaskEdit extends JFrame {
         JLabel labelInt = new JLabel("Interval:");
         panel_4.add(labelInt);
 
+        JCheckBox chckbxNewCheckBox = new JCheckBox("active");
+        panel_4.add(chckbxNewCheckBox);
+
         textField_1 = new JTextField();
         textField_1.setColumns(5);
         panel_4.add(textField_1);
@@ -93,12 +82,18 @@ public class ViewTaskEdit extends JFrame {
         JPanel panel_2 = new JPanel();
         contentPane.add(panel_2, BorderLayout.SOUTH);
 
-        JButton btnNewButton = new JButton("Confirm");
-        panel_2.add(btnNewButton);
+        JButton confirmButton = new JButton("Confirm");
+        confirmButton.addActionListener(engine);
+        panel_2.add(confirmButton);
 
-        JButton btnNewButton_1 = new JButton("Cancel");
-        panel_2.add(btnNewButton_1);
+        JButton cancelButton = new JButton("Cancel");
+        cancelButton.addActionListener(engine);
+        panel_2.add(cancelButton);
 
+        setTitle("Task Edit");
+        setMinimumSize(new Dimension(450, 300));
+        setLocationRelativeTo(null);
+        setVisible(true);
 
     }
 

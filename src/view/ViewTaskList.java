@@ -1,5 +1,7 @@
 package view;
 
+import controller.AppController;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -12,6 +14,9 @@ public class ViewTaskList extends JFrame {
      * Create the frame.
      */
     public ViewTaskList() {
+
+        AppController engine = new AppController(this);
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 450, 300);
         contentPane = new JPanel();
@@ -29,15 +34,25 @@ public class ViewTaskList extends JFrame {
         JPanel panel = new JPanel();
         contentPane.add(panel, BorderLayout.SOUTH);
 
-        JButton btnNewButton = new JButton("Calendar");
-        panel.add(btnNewButton);
+        JButton calendarButton = new JButton("Calendar");
+        calendarButton.addActionListener(engine);
+        panel.add(calendarButton);
 
-        JButton btnNewButton_1 = new JButton("Edit List");
-        panel.add(btnNewButton_1);
+        JButton editListButton = new JButton("Edit List");
+        editListButton.addActionListener(engine);
+        panel.add(editListButton);
 
-        JButton btnNewButton_2 = new JButton("Exit");
-        panel.add(btnNewButton_2);
+        JButton exitButton = new JButton("Exit");
+        exitButton.addActionListener(engine);
+        panel.add(exitButton);
+
+        setTitle("Task Manager");
+        setMinimumSize(new Dimension(450, 300));
+        setLocationRelativeTo(null);
+        setVisible(true);
+
     }
+
 
     /**
      * Launch the application.
@@ -49,6 +64,7 @@ public class ViewTaskList extends JFrame {
                     ViewTaskList frame = new ViewTaskList();
                     frame.setTitle("Task Manager");
                     frame.setMinimumSize(new Dimension(450, 300));
+                    frame.setLocationRelativeTo(null);
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();

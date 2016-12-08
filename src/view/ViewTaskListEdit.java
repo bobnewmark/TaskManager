@@ -1,5 +1,7 @@
 package view;
 
+import controller.AppController;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -12,6 +14,9 @@ public class ViewTaskListEdit extends JFrame {
      * Create the frame.
      */
     public ViewTaskListEdit() {
+
+        AppController engine = new AppController(this);
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 450, 300);
         contentPane = new JPanel();
@@ -29,14 +34,26 @@ public class ViewTaskListEdit extends JFrame {
         JPanel panel = new JPanel();
         contentPane.add(panel, BorderLayout.SOUTH);
 
-        JButton btnNewButton = new JButton("Add New");
-        panel.add(btnNewButton);
+        JButton addNewButton = new JButton("Add New");
+        addNewButton.addActionListener(engine);
+        panel.add(addNewButton);
 
-        JButton btnNewButton_1 = new JButton("Remove");
-        panel.add(btnNewButton_1);
+        JButton editButton = new JButton("Edit Task");
+        editButton.addActionListener(engine);
+        panel.add(editButton);
 
-        JButton btnNewButton_2 = new JButton("Back");
-        panel.add(btnNewButton_2);
+        JButton removeButton = new JButton("Remove");
+        removeButton.addActionListener(engine);
+        panel.add(removeButton);
+
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(engine);
+        panel.add(backButton);
+
+        setTitle("Task List Edit");
+        setMinimumSize(new Dimension(450, 300));
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
     /**
