@@ -1,6 +1,7 @@
 package view;
 
 import controller.AppController;
+import controller.MainController;
 import model.ArrayTaskList;
 
 import javax.swing.*;
@@ -11,7 +12,10 @@ import java.util.ArrayList;
 public class ViewTaskList extends JFrame {
 
     private JPanel contentPane;
-    private JLabel lblNewLabel;
+    private JLabel label;
+    private JButton calendarButton;
+    private JButton editListButton;
+    private JButton exitButton;
     DefaultListModel<String> model;
     JList<String> list;
 
@@ -30,26 +34,28 @@ public class ViewTaskList extends JFrame {
         setContentPane(contentPane);
         contentPane.setLayout(new BorderLayout(0, 0));
 
-        lblNewLabel = new JLabel("My task list");
-        lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        contentPane.add(lblNewLabel, BorderLayout.NORTH);
+        label = new JLabel("My task list");
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        contentPane.add(label, BorderLayout.NORTH);
 
         model = new DefaultListModel<>();
         list = new JList<>( model );
+        model.removeAllElements();
+        setList(MainController.getList());
         contentPane.add(list, BorderLayout.CENTER);
 
         JPanel panel = new JPanel();
         contentPane.add(panel, BorderLayout.SOUTH);
 
-        JButton calendarButton = new JButton("Calendar");
+        calendarButton = new JButton("Calendar");
         calendarButton.addActionListener(engine);
         panel.add(calendarButton);
 
-        JButton editListButton = new JButton("Edit List");
+        editListButton = new JButton("Edit List");
         editListButton.addActionListener(engine);
         panel.add(editListButton);
 
-        JButton exitButton = new JButton("Exit");
+        exitButton = new JButton("Exit");
         exitButton.addActionListener(engine);
         panel.add(exitButton);
 
@@ -70,9 +76,9 @@ public class ViewTaskList extends JFrame {
 
 
     public void setList(ArrayTaskList arrayTaskList) {
+        model.removeAllElements();
         for (int i = 0; i < arrayTaskList.size(); i++) {
             model.addElement(arrayTaskList.getTask(i).toString());
         }
-
     }
 }

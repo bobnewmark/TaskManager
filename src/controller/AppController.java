@@ -6,6 +6,7 @@ import view.*;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
 
 public class AppController implements ActionListener {
 
@@ -52,31 +53,11 @@ public class AppController implements ActionListener {
 
 
 
-    public void setViewCalendar(ViewCalendar viewCalendar) {
-        this.viewCalendar = viewCalendar;
-    }
-
-    public void setViewTaskListEdit(ViewTaskListEdit viewTaskListEdit) {
-        this.viewTaskListEdit = viewTaskListEdit;
-    }
-
-    public void setViewTaskAdd(ViewTaskAdd viewTaskAdd) {
-        this.viewTaskAdd = viewTaskAdd;
-    }
-
-    public void setViewTaskEdit(ViewTaskEdit viewTaskEdit) {
-        this.viewTaskEdit = viewTaskEdit;
-    }
-
-    public void setViewNotification(ViewNotification viewNotification) {
-        this.viewNotification = viewNotification;
-    }
-
     @Override
     public void actionPerformed(ActionEvent e) {
 
         JButton clicked = (JButton) e.getSource();
-        System.out.println(clicked.getActionCommand());
+        System.out.println("BUTTON CLICKED: " + clicked.getActionCommand());
 
         if (clicked.getActionCommand().equals("Calendar")) {
             viewTaskList.dispose();
@@ -86,6 +67,7 @@ public class AppController implements ActionListener {
 
         if (clicked.getActionCommand().equals("Exit")) {
             JOptionPane.showMessageDialog(new JFrame(), "This is going to be a warning pop-up later!");
+            MainController.saveList();
             System.exit(0);
         }
 
@@ -106,6 +88,7 @@ public class AppController implements ActionListener {
         if (clicked.getActionCommand().equals("Edit List")) {
             new ViewTaskListEdit();
             viewTaskList.dispose();
+            System.out.println(MainController.taskList.size());
         }
 
         if (clicked.getActionCommand().equals("Edit Task")) {
@@ -134,6 +117,8 @@ public class AppController implements ActionListener {
 
         if (clicked.getActionCommand().equals("Confirm")) {
             try {
+
+                viewTaskAdd.newTaskAdd();
                 viewTaskAdd.dispose();
                 new ViewTaskListEdit();
 
@@ -147,6 +132,12 @@ public class AppController implements ActionListener {
             } catch (Exception ex) {
             }
         }
+
+        if (clicked.getActionCommand().equals("Remove")) {
+            viewTaskListEdit.removeFromList();
+        }
+
+
 
 
     }

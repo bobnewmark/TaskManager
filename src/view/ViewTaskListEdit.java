@@ -1,6 +1,8 @@
 package view;
 
 import controller.AppController;
+import controller.MainController;
+import model.ArrayTaskList;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -9,6 +11,12 @@ import java.awt.*;
 public class ViewTaskListEdit extends JFrame {
 
     private JPanel contentPane;
+    private JButton addNewButton;
+    private JButton editButton;
+    private JButton removeButton;
+    private JButton backButton;
+    DefaultListModel<String> model;
+    JList<String> list;
 
     /**
      * Create the frame.
@@ -24,29 +32,33 @@ public class ViewTaskListEdit extends JFrame {
         setContentPane(contentPane);
         contentPane.setLayout(new BorderLayout(0, 0));
 
-        JLabel lblNewLabel = new JLabel("Task List Editor");
-        lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        contentPane.add(lblNewLabel, BorderLayout.NORTH);
+        JLabel label = new JLabel("Task List Editor");
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        contentPane.add(label, BorderLayout.NORTH);
 
-        JList list = new JList();
+        model = new DefaultListModel<>();
+        list = new JList<>( model );
+        model.removeAllElements();
+        setList(MainController.getList());
         contentPane.add(list, BorderLayout.CENTER);
+
 
         JPanel panel = new JPanel();
         contentPane.add(panel, BorderLayout.SOUTH);
 
-        JButton addNewButton = new JButton("Add New");
+        addNewButton = new JButton("Add New");
         addNewButton.addActionListener(engine);
         panel.add(addNewButton);
 
-        JButton editButton = new JButton("Edit Task");
+        editButton = new JButton("Edit Task");
         editButton.addActionListener(engine);
         panel.add(editButton);
 
-        JButton removeButton = new JButton("Remove");
+        removeButton = new JButton("Remove");
         removeButton.addActionListener(engine);
         panel.add(removeButton);
 
-        JButton backButton = new JButton("Back");
+        backButton = new JButton("Back");
         backButton.addActionListener(engine);
         panel.add(backButton);
 
@@ -56,23 +68,28 @@ public class ViewTaskListEdit extends JFrame {
         setVisible(true);
     }
 
-    /**
-     * Launch the application.
-     */
-    public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    ViewTaskListEdit frame = new ViewTaskListEdit();
-                    frame.setTitle("Task Manager");
-                    frame.setMinimumSize(new Dimension(450, 300));
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+    public String getSelectedFromList() {
+        String a = list.getSelectedValue().toString();
+        return a;
     }
+
+    // removes selected task from the list
+    public void removeFromList() {
+        int selectedIndex = list.getSelectedIndex();
+        MainController.removeFromList(selectedIndex);
+        model.removeAllElements();
+        setList(MainController.getList());
+    }
+
+    // builds list from MainController.taskList
+    public void setList(ArrayTaskList arrayTaskList) {
+        model.removeAllElements();
+        for (int i = 0; i < arrayTaskList.size(); i++) {
+            model.addElement(arrayTaskList.getTask(i).toString());
+        }
+    }
+
+
 
 }
 
