@@ -163,7 +163,7 @@ public class ViewTaskAdd extends JFrame implements ActionListener {
         cal.add(Calendar.HOUR_OF_DAY, timeSpinner1Date.getHours());
         cal.add(Calendar.MINUTE, timeSpinner1Date.getMinutes());
         cal.add(Calendar.SECOND, timeSpinner1Date.getSeconds());
-
+        System.out.println("!!!!!!!!!!!!!!!!!!!!!");
         long startLong = cal.getTimeInMillis() + picker1.getDate().getTime();
         boolean activity = activeness.isSelected();
 
@@ -171,6 +171,7 @@ public class ViewTaskAdd extends JFrame implements ActionListener {
         if (picker2.getDate() == null) {
             try {
                 tempTask = new Task(name, new Date(startLong), activity);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -193,6 +194,7 @@ public class ViewTaskAdd extends JFrame implements ActionListener {
         // adding created task to the list
 
         MainController.getList().add(tempTask);
+        System.out.println("task added");
     }
 
     public boolean checkInterval() {
@@ -221,8 +223,9 @@ public class ViewTaskAdd extends JFrame implements ActionListener {
             JOptionPane.showMessageDialog(new JFrame(), "End set earlier than start!");
             picker2.setDate(null);
         }
+    }
 
-
-
+    public boolean isRepeated() {
+        return picker2.getDate() != null;
     }
 }

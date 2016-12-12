@@ -95,8 +95,7 @@ public class AppController implements ActionListener {
                 JOptionPane.showMessageDialog(new JFrame(), "Select task to edit!");
                 viewTaskListEdit.dispose();
                 new ViewTaskListEdit();
-            }
-            else {
+            } else {
                 MainController.selected = viewTaskListEdit.getSelectedFromList();
 
                 viewTaskListEdit.dispose();
@@ -131,20 +130,22 @@ public class AppController implements ActionListener {
                     viewTaskAdd.newTaskAdd();
                     viewTaskAdd.dispose();
                     new ViewTaskListEdit();
-                } else {
+                } else if (!viewTaskAdd.checkInterval() && viewTaskAdd.isRepeated()) {
                     JOptionPane.showMessageDialog(new JFrame(), "Interval needs to be a positive number!");
                     viewTaskAdd.dispose();
                     new ViewTaskAdd();
+                } else {
+                    viewTaskAdd.newTaskAdd();
+                    viewTaskAdd.dispose();
+                    new ViewTaskListEdit();
                 }
-
-
-
 
 
             } catch (Exception ex) {
             }
 
             try {
+                viewTaskEdit.editTask();
                 viewTaskEdit.dispose();
                 new ViewTaskListEdit();
 

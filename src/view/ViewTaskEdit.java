@@ -148,7 +148,13 @@ public class ViewTaskEdit extends JFrame implements ActionListener {
         Task tempTask = null;
         String name = textField.getText();
         Date timeSpinner1Date = (Date) timeSpinner1.getValue();
-        long startLong = timeSpinner1Date.getTime() + picker1.getDate().getTime();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date(0));
+        cal.add(Calendar.HOUR_OF_DAY, timeSpinner1Date.getHours());
+        cal.add(Calendar.MINUTE, timeSpinner1Date.getMinutes());
+        cal.add(Calendar.SECOND, timeSpinner1Date.getSeconds());
+
+        long startLong = cal.getTimeInMillis() + picker1.getDate().getTime();
         boolean activity = activeness.isSelected();
 
         // if time for end is not set, taks is considered one-time
@@ -162,8 +168,13 @@ public class ViewTaskEdit extends JFrame implements ActionListener {
         } else {
             try {
                 int interval = Integer.parseInt(textField_1.getText());
-                //Date timeSpinner2Date = (Date) timeSpinner2.getValue();
-                long endLong = timeSpinner1Date.getTime() + picker1.getDate().getTime();
+                Date timeSpinner2Date = (Date) timeSpinner2.getValue();
+                Calendar cal1 = Calendar.getInstance();
+                cal1.setTime(new Date(0));
+                cal1.add(Calendar.HOUR_OF_DAY, timeSpinner2Date.getHours());
+                cal1.add(Calendar.MINUTE, timeSpinner2Date.getMinutes());
+                cal1.add(Calendar.SECOND, timeSpinner2Date.getSeconds());
+                long endLong = cal1.getTimeInMillis() + picker2.getDate().getTime();
                 tempTask = new Task(name, new Date(startLong), new Date(endLong), interval, activity);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -206,6 +217,8 @@ public class ViewTaskEdit extends JFrame implements ActionListener {
         timeSpinner1.setValue(temp.getStartTime());
         activeness.setSelected(temp.isActive());
         if (temp.isRepeated()) {
+            timeSpinner2.setEnabled(true);
+            textField_1.setEnabled(true);
             picker2.setDate(temp.getEndTime());
             repeating.setSelected(true);
             timeSpinner2.setValue(temp.getEndTime());
