@@ -6,7 +6,6 @@ import view.*;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.SimpleDateFormat;
 
 public class AppController implements ActionListener {
 
@@ -51,12 +50,12 @@ public class AppController implements ActionListener {
     }
 
 
-
-
     @Override
     public void actionPerformed(ActionEvent e) {
 
+
         JButton clicked = (JButton) e.getSource();
+
         System.out.println("BUTTON CLICKED: " + clicked.getActionCommand());
 
         if (clicked.getActionCommand().equals("Calendar")) {
@@ -92,8 +91,19 @@ public class AppController implements ActionListener {
         }
 
         if (clicked.getActionCommand().equals("Edit Task")) {
-            viewTaskListEdit.dispose();
-            new ViewTaskEdit();
+            if (viewTaskListEdit.getSelectedFromList() < 0) {
+                JOptionPane.showMessageDialog(new JFrame(), "Select task to edit!");
+                viewTaskListEdit.dispose();
+                new ViewTaskListEdit();
+            }
+            else {
+                MainController.selected = viewTaskListEdit.getSelectedFromList();
+
+                viewTaskListEdit.dispose();
+                new ViewTaskEdit();
+
+            }
+
         }
 
         if (clicked.getActionCommand().equals("Cancel")) {
@@ -117,10 +127,19 @@ public class AppController implements ActionListener {
 
         if (clicked.getActionCommand().equals("Confirm")) {
             try {
+                if (viewTaskAdd.checkInterval()) {
+                    viewTaskAdd.newTaskAdd();
+                    viewTaskAdd.dispose();
+                    new ViewTaskListEdit();
+                } else {
+                    JOptionPane.showMessageDialog(new JFrame(), "Interval needs to be a positive number!");
+                    viewTaskAdd.dispose();
+                    new ViewTaskAdd();
+                }
 
-                viewTaskAdd.newTaskAdd();
-                viewTaskAdd.dispose();
-                new ViewTaskListEdit();
+
+
+
 
             } catch (Exception ex) {
             }
@@ -138,7 +157,7 @@ public class AppController implements ActionListener {
         }
 
 
-
-
     }
+
+
 }

@@ -112,6 +112,11 @@ public class TaskIO {
                 int theInterval = 0;
 
                 switch (forInterval.length) {
+                    case 4:
+                        minutes = Long.parseLong(forInterval[0]);
+                        seconds = Long.parseLong(forInterval[2]);
+                        theInterval = (int) (seconds * 1000 + minutes * 60 * 1000) / 1000;
+                        break;
                     case 6:
                         hours = Long.parseLong(forInterval[0]);
                         minutes = Long.parseLong(forInterval[2]);

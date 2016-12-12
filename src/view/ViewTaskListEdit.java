@@ -68,9 +68,9 @@ public class ViewTaskListEdit extends JFrame {
         setVisible(true);
     }
 
-    public String getSelectedFromList() {
-        String a = list.getSelectedValue().toString();
-        return a;
+    public int getSelectedFromList() {
+
+        return list.getSelectedIndex();
     }
 
     // removes selected task from the list

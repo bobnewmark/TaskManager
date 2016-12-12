@@ -248,6 +248,8 @@ public class Task implements Cloneable, Serializable {
         String m = mins == 1 ? " minute " : " minutes ";
         String s = secs == 1 ? " second" : " seconds";
 
+        if (days == 0) return hours + h + mins + m + secs + s;
+        if (days == 0 && hours == 0) return mins + m + secs + s;
         return days + d + hours + h + mins + m + secs + s;
     }
 }

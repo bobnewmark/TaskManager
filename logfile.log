@@ -1,8 +1,4 @@
-2016-12-09 18:31:37,825 INFO  [Class] - AppController initialized by ViewTaskList
-2016-12-09 18:31:37,948 INFO  [Class] - engine started
-2016-12-09 18:31:39,064 INFO  [Class] - AppController initialized by ViewTaskListEdit
-2016-12-09 18:31:39,984 INFO  [Class] - AppController initialized by ViewTaskAdd
-2016-12-09 18:31:55,401 INFO  [Class] - AppController initialized by ViewTaskListEdit
-2016-12-09 18:32:02,065 INFO  [Class] - AppController initialized by ViewTaskAdd
-2016-12-09 18:32:18,707 INFO  [Class] - AppController initialized by ViewTaskListEdit
-2016-12-09 18:32:44,337 INFO  [Class] - AppController initialized by ViewTaskList
+2016-12-12 19:48:05,089 INFO  [Class] - AppController initialized by ViewTaskList
+2016-12-12 19:48:05,193 INFO  [Class] - engine started
+2016-12-12 19:48:06,106 INFO  [Class] - AppController initialized by ViewTaskListEdit
+2016-12-12 19:48:07,761 INFO  [Class] - AppController initialized by ViewTaskEdit

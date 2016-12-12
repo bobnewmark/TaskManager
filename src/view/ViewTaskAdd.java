@@ -4,16 +4,17 @@ import controller.AppController;
 import controller.MainController;
 import model.Task;
 import org.jdesktop.swingx.JXDatePicker;
-import org.jdesktop.swingx.calendar.DateUtils;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class ViewTaskAdd extends JFrame {
+public class ViewTaskAdd extends JFrame implements ActionListener {
 
     private JPanel contentPane;
     private JTextField textField;
@@ -90,12 +91,14 @@ public class ViewTaskAdd extends JFrame {
         picker2 = new JXDatePicker();
         //picker2.setDate(Calendar.getInstance().getTime());
         picker2.setFormats(new SimpleDateFormat("dd.MM.yyyy"));
+        picker2.addActionListener(this);
         panel_6.add(picker2);
 
         timeSpinner2 = new JSpinner(new SpinnerDateModel());
         JSpinner.DateEditor timeEditor2 = new JSpinner.DateEditor(timeSpinner2, "HH:mm:ss");
         timeSpinner2.setEditor(timeEditor2);
-        timeSpinner2.setValue(new Date());
+        //timeSpinner2.setValue(new Date());
+        timeSpinner2.setEnabled(false);
         panel_6.add(timeSpinner2);
         panel_5.add(panel_6, BorderLayout.EAST);
 
@@ -112,6 +115,7 @@ public class ViewTaskAdd extends JFrame {
         panel_8.add(labelInt);
 
         textField_1 = new JTextField();
+        textField_1.setEnabled(false);
         panel_8.add(textField_1);
         textField_1.setColumns(20);
 
@@ -147,49 +151,78 @@ public class ViewTaskAdd extends JFrame {
     }
 
 
+    // adding new task
     public void newTaskAdd() {
 
         Task tempTask = null;
+        int interval = -1;
         String name = textField.getText();
-//        SimpleDateFormat format = new SimpleDateFormat("y-MM-dd");
-//        String startDate = format.format(picker1.getDate());
-//        String endDate = format.format(picker1.getDate());
-        //Date one = (Date) timeSpinner1.getValue();
-        //Date two = (Date) timeSpinner2.getValue();
-
-//        Calendar calOne = Calendar.getInstance();
-//        calOne.setTime(picker1.getDate());
-
-        System.out.println("::::::::::::::::::::BEFORE STUPID TIMESPINNER1:::::::::::::::::::::::::::::::::");
-
         Date timeSpinner1Date = (Date) timeSpinner1.getValue();
-        System.out.println("cast to date");
-        long startLong = timeSpinner1Date.getTime() + picker1.getDate().getTime();
-        int interval = Integer.parseInt(textField_1.getText());
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date(0));
+        cal.add(Calendar.HOUR_OF_DAY, timeSpinner1Date.getHours());
+        cal.add(Calendar.MINUTE, timeSpinner1Date.getMinutes());
+        cal.add(Calendar.SECOND, timeSpinner1Date.getSeconds());
+
+        long startLong = cal.getTimeInMillis() + picker1.getDate().getTime();
         boolean activity = activeness.isSelected();
 
+        // if time for end is not set, taks is considered one-time
         if (picker2.getDate() == null) {
             try {
                 tempTask = new Task(name, new Date(startLong), activity);
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            // otherwise task is considered repeated so interval and end time are set
         } else {
             try {
+                interval = Integer.parseInt(textField_1.getText());
                 Date timeSpinner2Date = (Date) timeSpinner2.getValue();
-                System.out.println("cast to date222");
-                long endLong = timeSpinner1Date.getTime() + picker1.getDate().getTime();
+                Calendar cal1 = Calendar.getInstance();
+                cal1.setTime(new Date(0));
+                cal1.add(Calendar.HOUR_OF_DAY, timeSpinner2Date.getHours());
+                cal1.add(Calendar.MINUTE, timeSpinner2Date.getMinutes());
+                cal1.add(Calendar.SECOND, timeSpinner2Date.getSeconds());
+                long endLong = cal1.getTimeInMillis() + picker2.getDate().getTime();
                 tempTask = new Task(name, new Date(startLong), new Date(endLong), interval, activity);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+        // adding created task to the list
 
         MainController.getList().add(tempTask);
+    }
 
+    public boolean checkInterval() {
+        String str = textField_1.getText();
+        if (str == null) return false;
+        int length = str.length();
+        if (length == 0) return false;
+        for (int i = 0; i < length; i++) {
+            char c = str.charAt(i);
+            if (c < '0' || c > '9') {
+                return false;
+            }
+        }
+        return Integer.parseInt(str) > 0;
+    }
+
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        JXDatePicker action = (JXDatePicker) e.getSource();
+        if (action.getDate() != null) {
+            timeSpinner2.setEnabled(true);
+            textField_1.setEnabled(true);
+        }
+        if (picker1.getDate().getTime() > action.getDate().getTime()) {
+            JOptionPane.showMessageDialog(new JFrame(), "End set earlier than start!");
+            picker2.setDate(null);
+        }
 
 
 
     }
-
 }

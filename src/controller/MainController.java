@@ -15,6 +15,7 @@ public class MainController {
     final static Logger logger = Logger.getLogger(MainController.class.getClass());
     static ArrayTaskList taskList = new ArrayTaskList();
     static File listFile;
+    public static int selected;
 
     //saves current taskList to the text file listFile.txt. USED ONCE BEFORE CLOSING PROGRAM
     public static void saveList() {
