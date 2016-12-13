@@ -18,19 +18,27 @@ public class Tasks {
 
     // календар задач на заданий період
     public static SortedMap<Date, Set<Task>> calendar(Iterable<Task> tasks, Date start, Date end) throws CloneNotSupportedException {
-        TreeMap<Date, Set<Task>> treeMap = new TreeMap<Date, Set<Task>>();
+        TreeMap<Date, Set<Task>> treeMap = new TreeMap<>();
         ArrayTaskList tempList = (ArrayTaskList) incoming(tasks, start, end);
+
         for (Task task : tempList) {
             Date date = task.nextTimeAfter(start);
             while (!date.after(end)) {
                 if (treeMap.containsKey(date)) {
                     treeMap.get(date).add(task);
                 } else {
-                    HashSet<Task> innerSet = new HashSet<Task>();
+                    HashSet<Task> innerSet = new HashSet<>();
                     innerSet.add(task);
                     treeMap.put(date, innerSet);
                 }
-                date = task.nextTimeAfter(date);
+                if (!task.isRepeated()) {
+                    break;
+                }
+                if (task.nextTimeAfter(date) != null) {
+                    date = task.nextTimeAfter(date);
+                } else {
+                    break;
+                }
             }
         }
         return treeMap;

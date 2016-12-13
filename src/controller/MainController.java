@@ -12,7 +12,7 @@ import java.io.PrintWriter;
 
 public class MainController {
 
-    final static Logger logger = Logger.getLogger(MainController.class.getClass());
+    final static Logger logger1 = Logger.getLogger(MainController.class.getClass());
     static ArrayTaskList taskList = new ArrayTaskList();
     static File listFile;
     public static int selected;
@@ -56,12 +56,11 @@ public class MainController {
 
 
     public static void main(String[] args) {
-
+        logger1.info("TASKMANAGER LAUNCHED SUCCESSFULLY");
         listFile = new File("listFile.txt");
+        logger1.info("reading file 'listFile.txt' for any tasks...");
         readList();
         new ViewTaskList();
-
-        logger.info("engine started");
+        new NotifyController();
     }
-
 }

@@ -1,19 +1,28 @@
 package view;
 
 import controller.AppController;
+import controller.MainController;
+import model.Task;
+import model.Tasks;
 import org.jdesktop.swingx.JXDatePicker;
-
-import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.*;
 
-public class ViewCalendar extends JFrame {
+public class ViewCalendar extends JFrame implements ActionListener {
 
     private JPanel contentPane;
-
+    private DefaultListModel<String> model;
+    private JList<String> list;
+    private JXDatePicker picker1;
+    private JXDatePicker picker2;
+    private JButton buildButton;
+    private JButton backButton;
 
     /**
      * Create the frame.
@@ -30,49 +39,43 @@ public class ViewCalendar extends JFrame {
         contentPane.setLayout(new BorderLayout(0, 0));
 
         JLabel lblNewLabel = new JLabel("Task calendar for selected period");
-        //lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
         contentPane.add(lblNewLabel, BorderLayout.NORTH);
-
-
-
-        JList list = new JList();
+        model = new DefaultListModel<>();
+        list = new JList<>(model);
+        list.setSelectionModel(new DisabledItemSelectionModel());
         contentPane.add(list, BorderLayout.CENTER);
-
         JPanel panel = new JPanel();
         contentPane.add(panel, BorderLayout.SOUTH);
 
 
-
-
         JPanel panel_for_pickers = new JPanel(new GridLayout(10, 1));
-//panel_for_pickers.setLayout(new BoxLayout(panel_for_pickers, BoxLayout.Y_AXIS));
-        JXDatePicker picker = new JXDatePicker();
-        picker.setDate(Calendar.getInstance().getTime());
-        picker.setFormats(new SimpleDateFormat("dd.MM.yyyy"));
+        picker1 = new JXDatePicker();
+        picker1.setDate(Calendar.getInstance().getTime());
+        picker1.setFormats(new SimpleDateFormat("dd.MM.yyyy"));
 
-        JXDatePicker picker2 = new JXDatePicker();
+        picker2 = new JXDatePicker();
         picker2.setDate(Calendar.getInstance().getTime());
         picker2.setFormats(new SimpleDateFormat("dd.MM.yyyy"));
 
         JLabel begin = new JLabel("From");
         panel_for_pickers.add(begin);
-        panel_for_pickers.add(picker);
+        panel_for_pickers.add(picker1);
 
         JLabel end = new JLabel("To");
         panel_for_pickers.add(end);
         panel_for_pickers.add(picker2);
-        panel_for_pickers.add(Box.createRigidArea(new Dimension(0,0)));
+        panel_for_pickers.add(Box.createRigidArea(new Dimension(0, 0)));
 
-        JButton buildButton = new JButton("View");
-        buildButton.addActionListener(engine);
+        buildButton = new JButton("Show");
+        buildButton.addActionListener(this);
         buildButton.setPreferredSize(new Dimension(60, 40));
         panel_for_pickers.add(buildButton);
 
-        panel_for_pickers.add(Box.createRigidArea(new Dimension(0,0)));
-        panel_for_pickers.add(Box.createRigidArea(new Dimension(0,0)));
-        panel_for_pickers.add(Box.createRigidArea(new Dimension(0,0)));
+        panel_for_pickers.add(Box.createRigidArea(new Dimension(0, 0)));
+        panel_for_pickers.add(Box.createRigidArea(new Dimension(0, 0)));
+        panel_for_pickers.add(Box.createRigidArea(new Dimension(0, 0)));
 
-        JButton backButton = new JButton("Back");
+        backButton = new JButton("Back");
         backButton.addActionListener(engine);
         backButton.setPreferredSize(new Dimension(60, 40));
         panel_for_pickers.add(backButton);
@@ -82,10 +85,44 @@ public class ViewCalendar extends JFrame {
         setMinimumSize(new Dimension(450, 300));
         setLocationRelativeTo(null);
         setVisible(true);
+    }
 
+    // builds calendar for given period and brings it to the frame
+    public void setCalendar() {
+        model.removeAllElements();
+        Date start = picker1.getDate();
+        Date end = picker2.getDate();
+        if (picker1.getDate().getTime() > picker2.getDate().getTime()) {
+            JOptionPane.showMessageDialog(new JFrame(), "Invalid period set");
+        }
+        try {
+            TreeMap<Date, Set<Task>> treeMap1 = (TreeMap<Date, Set<Task>>) Tasks.calendar(MainController.getList(), start, end);
+            for (Map.Entry<Date, Set<Task>> entry: treeMap1.entrySet()) {
+                model.addElement(entry.getKey().toString());
+                for (Task task: entry.getValue()) {
+                    model.addElement(task.getTitle());
+                }
+            }
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+    }
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        JButton clicked = (JButton) e.getSource();
+        if (clicked.getActionCommand().equals("Show")) {
+            setCalendar();
+        }
+    }
 
-
+    // creating a class for jlist that makes its elements unselectable
+    class DisabledItemSelectionModel extends DefaultListSelectionModel {
+        @Override
+        public void setSelectionInterval(int index0, int index1) {
+            super.setSelectionInterval(-1, -1);
+            super.setSelectionMode(SINGLE_SELECTION);
+        }
     }
 
 }

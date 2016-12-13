@@ -75,7 +75,7 @@ public class ViewTaskEdit extends JFrame implements ActionListener {
 
         // timepinner for choosing start time
         timeSpinner1 = new JSpinner(new SpinnerDateModel());
-        JSpinner.DateEditor timeEditor1 = new JSpinner.DateEditor(timeSpinner1, "HH:mm:ss");
+        JSpinner.DateEditor timeEditor1 = new JSpinner.DateEditor(timeSpinner1, "HH:mm");
         timeSpinner1.setEditor(timeEditor1);
         panel_4.add(timeSpinner1);
 
@@ -93,7 +93,7 @@ public class ViewTaskEdit extends JFrame implements ActionListener {
 
         // timepinner for choosing end time
         timeSpinner2 = new JSpinner(new SpinnerDateModel());
-        JSpinner.DateEditor timeEditor2 = new JSpinner.DateEditor(timeSpinner2, "HH:mm:ss");
+        JSpinner.DateEditor timeEditor2 = new JSpinner.DateEditor(timeSpinner2, "HH:mm");
         timeSpinner2.setEditor(timeEditor2);
         timeSpinner2.setEnabled(false);
         panel_6.add(timeSpinner2);
@@ -198,7 +198,7 @@ public class ViewTaskEdit extends JFrame implements ActionListener {
                 textField_1.setEnabled(false);
                 picker2.setDate(null);
             }
-        } catch (Exception ex) {}
+        } catch (Exception ignored) {}
 
         try {
             JXDatePicker action = (JXDatePicker) e.getSource();
@@ -206,7 +206,7 @@ public class ViewTaskEdit extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(new JFrame(), "End set earlier than start!");
                 picker2.setDate(null);
             }
-        } catch (Exception ex) {}
+        } catch (Exception ignored) {}
     }
 
     // bringing selected task from viewTaskEditList to viewTaskEdit frame

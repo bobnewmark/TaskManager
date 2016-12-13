@@ -19,11 +19,11 @@ public class ViewTaskAdd extends JFrame implements ActionListener {
     private JPanel contentPane;
     private JTextField textField;
     private JTextField textField_1;
-    JXDatePicker picker1;
-    JXDatePicker picker2;
-    JSpinner timeSpinner1;
-    JSpinner timeSpinner2;
-    JCheckBox activeness;
+    private JXDatePicker picker1;
+    private JXDatePicker picker2;
+    private JSpinner timeSpinner1;
+    private JSpinner timeSpinner2;
+    private JCheckBox activeness;
 
 
     /**
@@ -42,7 +42,6 @@ public class ViewTaskAdd extends JFrame implements ActionListener {
 
         JPanel panel = new JPanel();
         contentPane.add(panel, BorderLayout.NORTH);
-
         JPanel panel_1 = new JPanel();
         contentPane.add(panel_1, BorderLayout.CENTER);
         panel_1.setLayout(new BorderLayout(0, 0));
@@ -54,7 +53,6 @@ public class ViewTaskAdd extends JFrame implements ActionListener {
 
         JLabel lblNewLabel = new JLabel("New Task:");
         panel_3.add(lblNewLabel);
-
         textField = new JTextField();
         panel_3.add(textField);
         textField.setColumns(30);
@@ -62,25 +60,22 @@ public class ViewTaskAdd extends JFrame implements ActionListener {
         JPanel panel_5 = new JPanel();
         panel_1.add(panel_5, BorderLayout.CENTER);
         panel_5.setLayout(new BorderLayout(0, 0));
-
         JPanel panel_4 = new JPanel();
         panel_5.add(panel_4, BorderLayout.WEST);
         panel_4.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 30));
 
         JLabel lblNewLabel_2 = new JLabel("Start");
         panel_4.add(lblNewLabel_2);
-
         picker1 = new JXDatePicker();
         picker1.setDate(Calendar.getInstance().getTime());
         picker1.setFormats(new SimpleDateFormat("dd.MM.yyyy"));
         panel_4.add(picker1);
 
         timeSpinner1 = new JSpinner(new SpinnerDateModel());
-        JSpinner.DateEditor timeEditor1 = new JSpinner.DateEditor(timeSpinner1, "HH:mm:ss");
+        JSpinner.DateEditor timeEditor1 = new JSpinner.DateEditor(timeSpinner1, "HH:mm");
         timeSpinner1.setEditor(timeEditor1);
-        timeSpinner1.setValue(new Date());
+        timeSpinner1.setValue(zeroTime());
         panel_4.add(timeSpinner1);
-
 
         JPanel panel_6 = new JPanel();
         FlowLayout flowLayout = (FlowLayout) panel_6.getLayout();
@@ -89,15 +84,14 @@ public class ViewTaskAdd extends JFrame implements ActionListener {
         panel_6.add(lblNewLabel_3);
 
         picker2 = new JXDatePicker();
-        //picker2.setDate(Calendar.getInstance().getTime());
         picker2.setFormats(new SimpleDateFormat("dd.MM.yyyy"));
         picker2.addActionListener(this);
         panel_6.add(picker2);
 
         timeSpinner2 = new JSpinner(new SpinnerDateModel());
-        JSpinner.DateEditor timeEditor2 = new JSpinner.DateEditor(timeSpinner2, "HH:mm:ss");
+        JSpinner.DateEditor timeEditor2 = new JSpinner.DateEditor(timeSpinner2, "HH:mm");
         timeSpinner2.setEditor(timeEditor2);
-        //timeSpinner2.setValue(new Date());
+        timeSpinner2.setValue(zeroTime());
         timeSpinner2.setEnabled(false);
         panel_6.add(timeSpinner2);
         panel_5.add(panel_6, BorderLayout.EAST);
@@ -105,7 +99,6 @@ public class ViewTaskAdd extends JFrame implements ActionListener {
         JPanel panel_7 = new JPanel();
         panel_5.add(panel_7, BorderLayout.SOUTH);
         panel_7.setLayout(new BorderLayout(0, 5));
-
         JPanel panel_8 = new JPanel();
         FlowLayout flowLayout_1 = (FlowLayout) panel_8.getLayout();
         flowLayout_1.setVgap(15);
@@ -113,12 +106,10 @@ public class ViewTaskAdd extends JFrame implements ActionListener {
 
         JLabel labelInt = new JLabel("Interval:");
         panel_8.add(labelInt);
-
         textField_1 = new JTextField();
         textField_1.setEnabled(false);
         panel_8.add(textField_1);
         textField_1.setColumns(20);
-
         activeness = new JCheckBox("active");
         panel_8.add(activeness);
 
@@ -134,20 +125,15 @@ public class ViewTaskAdd extends JFrame implements ActionListener {
 
         JButton confirmButton = new JButton("Confirm");
         confirmButton.addActionListener(engine);
-
         panel_2.add(confirmButton);
-
         JButton cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(engine);
-
         panel_2.add(cancelButton);
 
         setTitle("Task Add");
         setMinimumSize(new Dimension(475, 300));
         setLocationRelativeTo(null);
         setVisible(true);
-
-
     }
 
 
@@ -167,7 +153,7 @@ public class ViewTaskAdd extends JFrame implements ActionListener {
         long startLong = cal.getTimeInMillis() + picker1.getDate().getTime();
         boolean activity = activeness.isSelected();
 
-        // if time for end is not set, taks is considered one-time
+        // if time for end is not set, task is considered one-time
         if (picker2.getDate() == null) {
             try {
                 tempTask = new Task(name, new Date(startLong), activity);
@@ -192,11 +178,11 @@ public class ViewTaskAdd extends JFrame implements ActionListener {
             }
         }
         // adding created task to the list
-
         MainController.getList().add(tempTask);
         System.out.println("task added");
     }
 
+    //checks if interval is all numeric
     public boolean checkInterval() {
         String str = textField_1.getText();
         if (str == null) return false;
@@ -215,14 +201,27 @@ public class ViewTaskAdd extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         JXDatePicker action = (JXDatePicker) e.getSource();
+        // when user sets date for end fields for interval and end time become editable
         if (action.getDate() != null) {
             timeSpinner2.setEnabled(true);
             textField_1.setEnabled(true);
         }
+        // warning message if end is set earlier than start
         if (picker1.getDate().getTime() > action.getDate().getTime()) {
             JOptionPane.showMessageDialog(new JFrame(), "End set earlier than start!");
             picker2.setDate(null);
         }
+    }
+
+    // method to discard hours, mins, secs and millisecs from date (to add time from jspinner)
+    public static Date zeroTime() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
     }
 
     public boolean isRepeated() {

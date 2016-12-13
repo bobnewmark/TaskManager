@@ -16,8 +16,8 @@ public class ViewTaskList extends JFrame {
     private JButton calendarButton;
     private JButton editListButton;
     private JButton exitButton;
-    DefaultListModel<String> model;
-    JList<String> list;
+    private DefaultListModel<String> model;
+    private JList<String> list;
 
 
     /**
@@ -40,6 +40,7 @@ public class ViewTaskList extends JFrame {
 
         model = new DefaultListModel<>();
         list = new JList<>( model );
+        list.setSelectionModel(new DisabledItemSelectionModel());
         model.removeAllElements();
         setList(MainController.getList());
         contentPane.add(list, BorderLayout.CENTER);
@@ -65,20 +66,20 @@ public class ViewTaskList extends JFrame {
         setVisible(true);
     }
 
-    //TODO: METHOD PROBABLY NEEDS A FIX, SEE LATER
-    public ArrayList<String> getList() {
-        ArrayList<String> temp = new ArrayList<>();
-        for (int i = 0; i < list.getModel().getSize(); i++) {
-            temp.add((String) list.getModel().getElementAt(i));
-        }
-        return temp;
-    }
-
-
-    public void setList(ArrayTaskList arrayTaskList) {
+    // brings tasklist to the frame
+    private void setList(ArrayTaskList arrayTaskList) {
         model.removeAllElements();
         for (int i = 0; i < arrayTaskList.size(); i++) {
             model.addElement(arrayTaskList.getTask(i).toString());
+        }
+    }
+
+    // creating a class for jlist that makes its elements unselectable
+    private class DisabledItemSelectionModel extends DefaultListSelectionModel {
+        @Override
+        public void setSelectionInterval(int index0, int index1) {
+            super.setSelectionInterval(-1, -1);
+            super.setSelectionMode(SINGLE_SELECTION);
         }
     }
 }

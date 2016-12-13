@@ -15,8 +15,8 @@ public class ViewTaskListEdit extends JFrame {
     private JButton editButton;
     private JButton removeButton;
     private JButton backButton;
-    DefaultListModel<String> model;
-    JList<String> list;
+    private DefaultListModel<String> model;
+    private JList<String> list;
 
     /**
      * Create the frame.
@@ -42,22 +42,18 @@ public class ViewTaskListEdit extends JFrame {
         setList(MainController.getList());
         contentPane.add(list, BorderLayout.CENTER);
 
-
         JPanel panel = new JPanel();
         contentPane.add(panel, BorderLayout.SOUTH);
 
         addNewButton = new JButton("Add New");
         addNewButton.addActionListener(engine);
         panel.add(addNewButton);
-
         editButton = new JButton("Edit Task");
         editButton.addActionListener(engine);
         panel.add(editButton);
-
         removeButton = new JButton("Remove");
         removeButton.addActionListener(engine);
         panel.add(removeButton);
-
         backButton = new JButton("Back");
         backButton.addActionListener(engine);
         panel.add(backButton);
@@ -69,7 +65,6 @@ public class ViewTaskListEdit extends JFrame {
     }
 
     public int getSelectedFromList() {
-
         return list.getSelectedIndex();
     }
 
@@ -82,14 +77,10 @@ public class ViewTaskListEdit extends JFrame {
     }
 
     // builds list from MainController.taskList
-    public void setList(ArrayTaskList arrayTaskList) {
+    private void setList(ArrayTaskList arrayTaskList) {
         model.removeAllElements();
         for (int i = 0; i < arrayTaskList.size(); i++) {
             model.addElement(arrayTaskList.getTask(i).toString());
         }
     }
-
-
-
 }
-
