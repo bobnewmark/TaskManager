@@ -90,8 +90,8 @@ public class AppController implements ActionListener {
         if (clicked.getActionCommand().equals("Edit Task")) {
             if (viewTaskListEdit.getSelectedFromList() < 0) {
                 JOptionPane.showMessageDialog(new JFrame(), "Select task to edit!");
-                viewTaskListEdit.dispose();
-                new ViewTaskListEdit();
+                //viewTaskListEdit.dispose();
+                //new ViewTaskListEdit();
             } else {
                 MainController.selected = viewTaskListEdit.getSelectedFromList();
                 viewTaskListEdit.dispose();
@@ -123,14 +123,16 @@ public class AppController implements ActionListener {
         // checks interval for positive integer value and adds new task to the list
         if (clicked.getActionCommand().equals("Confirm")) {
             try {
-                if (viewTaskAdd.checkInterval()) {
+                if (viewTaskAdd.checkInterval() && viewTaskAdd.checkTitle()) {
                     viewTaskAdd.newTaskAdd();
                     viewTaskAdd.dispose();
                     new ViewTaskListEdit();
                 } else if (!viewTaskAdd.checkInterval() && viewTaskAdd.isRepeated()) {
                     JOptionPane.showMessageDialog(new JFrame(), "Interval needs to be a positive number!");
-                    viewTaskAdd.dispose();
-                    new ViewTaskAdd();
+                    //viewTaskAdd.dispose();
+                    //new ViewTaskAdd();
+                } else if (!viewTaskAdd.checkTitle()) {
+                    JOptionPane.showMessageDialog(new JFrame(), "Enter the title of new task!");
                 } else {
                     viewTaskAdd.newTaskAdd();
                     viewTaskAdd.dispose();

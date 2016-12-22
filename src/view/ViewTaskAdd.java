@@ -195,6 +195,11 @@ public class ViewTaskAdd extends JFrame implements ActionListener {
         return Integer.parseInt(str) > 0;
     }
 
+    public boolean checkTitle() {
+        String s = textField.getText();
+        return s.length() > 0;
+    }
+
 
     @Override
     public void actionPerformed(ActionEvent e) {
