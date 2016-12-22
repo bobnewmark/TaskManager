@@ -12,9 +12,9 @@ import java.io.PrintWriter;
 
 public class MainController {
 
+    static File listFile = new File("listFile.txt");
     final static Logger logger1 = Logger.getLogger(MainController.class.getClass());
     static ArrayTaskList taskList = new ArrayTaskList();
-    static File listFile;
     public static int selected;
 
     //saves current taskList to the text file listFile.txt. USED ONCE BEFORE CLOSING PROGRAM
@@ -57,7 +57,7 @@ public class MainController {
 
     public static void main(String[] args) {
         logger1.info("TASKMANAGER LAUNCHED SUCCESSFULLY");
-        listFile = new File("listFile.txt");
+        //listFile = new File("listFile.txt");
         logger1.info("reading file 'listFile.txt' for any tasks...");
         readList();
         new ViewTaskList();

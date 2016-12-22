@@ -104,7 +104,7 @@ public class ViewTaskAdd extends JFrame implements ActionListener {
         flowLayout_1.setVgap(15);
         panel_7.add(panel_8, BorderLayout.NORTH);
 
-        JLabel labelInt = new JLabel("Interval:");
+        JLabel labelInt = new JLabel("Interval (min):");
         panel_8.add(labelInt);
         textField_1 = new JTextField();
         textField_1.setEnabled(false);
@@ -149,7 +149,6 @@ public class ViewTaskAdd extends JFrame implements ActionListener {
         cal.add(Calendar.HOUR_OF_DAY, timeSpinner1Date.getHours());
         cal.add(Calendar.MINUTE, timeSpinner1Date.getMinutes());
         cal.add(Calendar.SECOND, timeSpinner1Date.getSeconds());
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!");
         long startLong = cal.getTimeInMillis() + picker1.getDate().getTime();
         boolean activity = activeness.isSelected();
 
@@ -164,7 +163,7 @@ public class ViewTaskAdd extends JFrame implements ActionListener {
             // otherwise task is considered repeated so interval and end time are set
         } else {
             try {
-                interval = Integer.parseInt(textField_1.getText());
+                interval = Integer.parseInt(textField_1.getText()) * 60;
                 Date timeSpinner2Date = (Date) timeSpinner2.getValue();
                 Calendar cal1 = Calendar.getInstance();
                 cal1.setTime(new Date(0));
@@ -179,7 +178,6 @@ public class ViewTaskAdd extends JFrame implements ActionListener {
         }
         // adding created task to the list
         MainController.getList().add(tempTask);
-        System.out.println("task added");
     }
 
     //checks if interval is all numeric

@@ -108,7 +108,7 @@ public class ViewTaskEdit extends JFrame implements ActionListener {
         panel_7.add(panel_8, BorderLayout.NORTH);
 
         // here you can set the task interval
-        JLabel labelInt = new JLabel("Interval:");
+        JLabel labelInt = new JLabel("Interval (min):");
         panel_8.add(labelInt);
         textField_1 = new JTextField();
         textField_1.setEnabled(false);
@@ -167,7 +167,7 @@ public class ViewTaskEdit extends JFrame implements ActionListener {
             // otherwise task is considered repeated so interval and end time are set
         } else {
             try {
-                int interval = Integer.parseInt(textField_1.getText());
+                int interval = Integer.parseInt(textField_1.getText()) * 60;
                 Date timeSpinner2Date = (Date) timeSpinner2.getValue();
                 Calendar cal1 = Calendar.getInstance();
                 cal1.setTime(new Date(0));
