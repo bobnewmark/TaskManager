@@ -2,40 +2,50 @@ package controller;
 
 import model.ArrayTaskList;
 import model.Task;
+import model.TaskIO;
 import view.ViewNotification;
-
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
 
 public class NotifyController extends Thread implements ActionListener {
 
     private ViewNotification viewNotification;
     static ArrayTaskList arrayTaskList;
-    private HashMap<Task, Date> snoozeMap = new HashMap<>();
+    private static TreeMap<Task, Date> snoozeMap = new TreeMap<>((o1, o2) -> o1.hashCode() - o2.hashCode());
+    static File snoozeTasks = new File("snoozeTasks.txt");
+    static File snoozeTime = new File("snoozeTime.txt");
+
 
     public NotifyController() {
+
+        //if needed files aren't found they are created
+        if (!snoozeTasks.exists()) try {
+            snoozeTasks.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (!snoozeTime.exists()) try {
+            snoozeTime.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         setDaemon(true);
-        run();
+        start();
     }
 
     public void run() {
-
-        System.out.println("::::::::::::::NOTIFY CONTROLLER RUNNING::::::::::::::");
+        readSnooze();
 
         while (true) {
-            for (Map.Entry<Task, Date> entry : snoozeMap.entrySet()) {
-                System.out.println(entry.getKey().getTitle() + " " + entry.getValue());
-            }
             buildArrayTaskList();
 
-            // if there's at least one task to notify the message dialog pane informs user about task/s to do
+            // if there's at least one task to notify, notifier informs user about task/s to do
             if (arrayTaskList.size() > 0) {
-
                 if (viewNotification != null) viewNotification.dispose();
                 viewNotification = new ViewNotification(this);
                 viewNotification.setModel(arrayTaskList);
@@ -62,46 +72,35 @@ public class NotifyController extends Thread implements ActionListener {
 
         // looping through tasklist for tasks to notify user about
         for (Task task : MainController.getList()) {
-
             long t = calendar.getTimeInMillis();
             Calendar testDate = Calendar.getInstance();
             if (task.nextTimeAfter(new Date(t - 60000)) != null) {
-                //System.out.println("task.nexTimeAfter(new Date(t - 60000)) = " + task.nextTimeAfter(new Date(t - 60000)));
                 testDate.setTime(task.nextTimeAfter(new Date(t - 60000)));
-                //System.out.println("CALENDAR NEW DATE IS: " + calendar.getTime());
-                //System.out.println("TESTDATE NEW DATE IS: " + testDate.getTime());
                 if (testDate != null && task.isActive()) {
                     if (testDate.get(Calendar.YEAR) != calendar.get(Calendar.YEAR)) continue;
                     if (testDate.get(Calendar.MONTH) != calendar.get(Calendar.MONTH)) continue;
                     if (testDate.get(Calendar.DAY_OF_MONTH) != calendar.get(Calendar.DAY_OF_MONTH)) continue;
                     if (testDate.get(Calendar.HOUR_OF_DAY) != calendar.get(Calendar.HOUR_OF_DAY)) continue;
                     if (testDate.get(Calendar.MINUTE) != calendar.get(Calendar.MINUTE)) continue;
-                    //System.out.println("test0");
+
+                    // if there are some snoozed tasks in snoozeMap we check them
                     if (snoozeMap.size() > 0) {
                         for (Map.Entry<Task, Date> entry : snoozeMap.entrySet()) {
                             if (task.equals(entry.getKey()) && task.nextTimeAfter(new Date(t - 60000)).before(entry.getValue())) {
-                                //System.out.println("test1");
-                                continue;
+                                continue; // we don't put task in notification list if its snooze time is set later than current time
                             } else if (task.equals(entry.getKey())) {
-                                snoozeMap.remove(entry.getKey());
+                                snoozeMap.remove(entry.getKey()); //we remove task from snoozeMap if its time has passed
                                 arrayTaskList.add(task);
                             } else {
                                 arrayTaskList.add(task);
                             }
                         }
-
                     } else {
                         arrayTaskList.add(task);
                     }
-
-                    //System.out.println("::::::::::::::TASK ADDED TO NOTIFY::::::::::::::");
-
-
                 }
             }
         }
-
-
     }
 
     @Override
@@ -109,6 +108,7 @@ public class NotifyController extends Thread implements ActionListener {
 
         JButton clicked = (JButton) e.getSource();
 
+        // if user dismisses a task its activeness sets to false
         if (clicked.getActionCommand().equals("Dismiss")) {
             int i = viewNotification.getSelectedNotify();
             if (i < 0) {
@@ -127,6 +127,7 @@ public class NotifyController extends Thread implements ActionListener {
                 viewNotification.setModel(arrayTaskList);
             }
         }
+        // all tasks' activeness in notification list set to false
         if (clicked.getActionCommand().equals("Dismiss All")) {
 
             for (int j = 0; j < MainController.getList().size(); j++) {
@@ -139,6 +140,8 @@ public class NotifyController extends Thread implements ActionListener {
             buildArrayTaskList();
             viewNotification.setModel(arrayTaskList);
         }
+
+        // setting snooze for tasks puts them to the snoozeMap and prevents from appearing in notifier for set time
         if (clicked.getActionCommand().equals("Set Snooze")) {
             int index = viewNotification.getSelectedNotify();
             String comBoxValue = viewNotification.getComboBoxValue();
@@ -152,48 +155,116 @@ public class NotifyController extends Thread implements ActionListener {
                         for (int j = 0; j < MainController.getList().size(); j++) {
                             if (MainController.getList().getTask(j).equals(snoozeTask)) {
                                 snoozeMap.put(snoozeTask, new Date(new Date().getTime() + 300000));
-                                System.out.println("snoozeMap");
-                                for (Map.Entry<Task, Date> entry : snoozeMap.entrySet()) {
-                                    System.out.println(entry.getKey().getTitle() + " " + entry.getValue());
-                                }
                                 arrayTaskList.remove(arrayTaskList.getTask(index));
                                 buildArrayTaskList();
                                 viewNotification.setModel(arrayTaskList);
                             }
                         }
                         break;
+
                     case "Remind 30 minutes later":
                         for (int j = 0; j < MainController.getList().size(); j++) {
                             if (MainController.getList().getTask(j).equals(snoozeTask)) {
                                 snoozeMap.put(snoozeTask, new Date(new Date().getTime() + 1800000));
+                                arrayTaskList.remove(arrayTaskList.getTask(index));
+                                buildArrayTaskList();
+                                viewNotification.setModel(arrayTaskList);
                             }
                         }
                         break;
+
                     case "Remind 1 hour later":
                         for (int j = 0; j < MainController.getList().size(); j++) {
                             if (MainController.getList().getTask(j).equals(snoozeTask)) {
                                 snoozeMap.put(snoozeTask, new Date(new Date().getTime() + 3600000));
+                                arrayTaskList.remove(arrayTaskList.getTask(index));
+                                buildArrayTaskList();
+                                viewNotification.setModel(arrayTaskList);
                             }
                         }
                         break;
+
                     case "Remind 1 day later":
                         for (int j = 0; j < MainController.getList().size(); j++) {
                             if (MainController.getList().getTask(j).equals(snoozeTask)) {
                                 snoozeMap.put(snoozeTask, new Date(new Date().getTime() + 86400000));
+                                arrayTaskList.remove(arrayTaskList.getTask(index));
+                                buildArrayTaskList();
+                                viewNotification.setModel(arrayTaskList);
                             }
                         }
                         break;
+
                     case "":
+                        JOptionPane.showMessageDialog(new JFrame(), "You didn't set snooze time!");
                         break;
                 }
                 buildArrayTaskList();
                 viewNotification.setModel(arrayTaskList);
             }
-
-
         }
+    }
 
+    // method saves snoozed tasks and their time to files
+    public static void saveSnooze() {
+        try (BufferedWriter br = new BufferedWriter(new FileWriter(snoozeTasks))) {
+            ArrayTaskList temp = new ArrayTaskList();
+            ArrayList<Date> tempDate = new ArrayList<>();
+            for (Map.Entry<Task, Date> entry : snoozeMap.entrySet()) {
+                temp.add(entry.getKey());
+                tempDate.add(entry.getValue());
+            }
+            TaskIO.writeText(temp, snoozeTasks);
+            try (BufferedWriter br2 = new BufferedWriter(new FileWriter(snoozeTime))) {
+                for (int i = 0; i < tempDate.size(); i++) {
+                    br2.write(String.valueOf(tempDate.get(i).getTime()));
+                    br2.newLine();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
+    // method reads snoozed tasks and their time from files
+    public static void readSnooze() {
+        int linesTasks = 0;
+        int linesTime = 0;
+        ArrayTaskList temp = new ArrayTaskList();
+
+        ArrayList<Date> tempDate = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(snoozeTasks));
+             BufferedReader br2 = new BufferedReader(new FileReader(snoozeTime))) {
+            String line;
+            String line2;
+
+            while ((line = br.readLine()) != null) {
+                linesTasks++;
+            }
+            while ((line2 = br2.readLine()) != null) {
+                tempDate.add(new Date(Long.parseLong(line2)));
+                linesTime++;
+            }
+            if ((linesTasks == linesTime) && linesTasks != 0) {
+                TaskIO.readText(temp, snoozeTasks);
+                for (int i = 0; i < linesTasks; i++) {
+                    snoozeMap.put(temp.getTask(i), tempDate.get(i));
+                }
+            }
+            // if number of tasks and number of time for snooze if different we clear both files
+            else if (linesTasks != linesTime) {
+                JOptionPane.showMessageDialog(new JFrame(), "Snoozed tasks cannot be restored! Snooze list was reset");
+                try {
+                    Writer writer = new BufferedWriter(new FileWriter(snoozeTasks));
+                    writer.write("");
+                    writer = new BufferedWriter(new FileWriter(snoozeTime));
+                    writer.write("");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
-

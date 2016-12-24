@@ -61,6 +61,7 @@ public class AppController implements ActionListener {
         if (clicked.getActionCommand().equals("Exit")) {
             logger.info("Saving list of tasks to file 'listFule.txt'...");
             MainController.saveList();
+            NotifyController.saveSnooze();
             logger.info("TASKMANAGER IS SHUTTING DOWN");
             System.exit(0);
         }
@@ -72,7 +73,7 @@ public class AppController implements ActionListener {
                 new ViewTaskList();
             } catch (Exception ignored) {
             }
-        // if user clicks 'back' on editin task frame he goes to ViewTaskList as well
+            // if user clicks 'back' on editin task frame he goes to ViewTaskList as well
             try {
                 viewTaskListEdit.dispose();
                 new ViewTaskList();
@@ -106,7 +107,7 @@ public class AppController implements ActionListener {
                 new ViewTaskListEdit();
             } catch (Exception ignored) {
             }
-        // cancels task adding
+            // cancels task adding
             try {
                 viewTaskAdd.dispose();
                 new ViewTaskListEdit();
@@ -141,7 +142,7 @@ public class AppController implements ActionListener {
                 logger.info("New task was added to the list");
             } catch (Exception ignored) {
             }
-        // returns user from ViewTaskEdit ti ViewTaskListEdit (changes saved)
+            // returns user from ViewTaskEdit ti ViewTaskListEdit (changes saved)
             try {
                 viewTaskEdit.editTask();
                 viewTaskEdit.dispose();

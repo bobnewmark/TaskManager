@@ -1,10 +1,10 @@
 package controller;
 
 import model.ArrayTaskList;
-import model.Task;
 import model.TaskIO;
 import org.apache.log4j.Logger;
 import view.ViewTaskList;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -57,7 +57,11 @@ public class MainController {
 
     public static void main(String[] args) {
         logger1.info("TASKMANAGER LAUNCHED SUCCESSFULLY");
-        //listFile = new File("listFile.txt");
+        if (!listFile.exists()) try {
+            listFile.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         logger1.info("reading file 'listFile.txt' for any tasks...");
         readList();
         new ViewTaskList();
