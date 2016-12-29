@@ -22,7 +22,7 @@ public class MainController {
         try {
             TaskIO.writeText(taskList, listFile);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger1.error("Cannot save changes to file \"listFile.txt\"");
         }
     }
 
@@ -31,7 +31,7 @@ public class MainController {
         try {
             TaskIO.readText(taskList, listFile);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger1.error("Cannot read file \"listFile.txt\"");
         }
     }
 
@@ -40,7 +40,7 @@ public class MainController {
         try {
             new PrintWriter("listFile.txt").close();
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            logger1.error("Cannot clear file \"listFile.txt\"");
         }
     }
 
@@ -60,7 +60,7 @@ public class MainController {
         if (!listFile.exists()) try {
             listFile.createNewFile();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger1.error("Cannot create file \"listFile.txt\"");
         }
         logger1.info("reading file 'listFile.txt' for any tasks...");
         readList();

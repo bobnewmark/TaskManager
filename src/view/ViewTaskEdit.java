@@ -3,6 +3,7 @@ package view;
 import controller.AppController;
 import controller.MainController;
 import model.Task;
+import org.apache.log4j.Logger;
 import org.jdesktop.swingx.JXDatePicker;
 
 import javax.swing.*;
@@ -26,6 +27,7 @@ public class ViewTaskEdit extends JFrame implements ActionListener {
     JCheckBox activeness;
     JCheckBox repeating;
 
+    private final static Logger logger = Logger.getLogger(ViewTaskEdit.class.getClass());
 
     /**
      * Create the frame.
@@ -157,12 +159,13 @@ public class ViewTaskEdit extends JFrame implements ActionListener {
         long startLong = cal.getTimeInMillis() + picker1.getDate().getTime();
         boolean activity = activeness.isSelected();
 
-        // if time for end is not set, taks is considered one-time
+        // if time for end is not set, task is considered one-time
         if (picker2.getDate() == null) {
             try {
                 tempTask = new Task(name, new Date(startLong), activity);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("Cannot save changes as non repeating task");
+
             }
             // otherwise task is considered repeated so interval and end time are set
         } else {
@@ -177,8 +180,7 @@ public class ViewTaskEdit extends JFrame implements ActionListener {
                 long endLong = cal1.getTimeInMillis() + picker2.getDate().getTime();
                 tempTask = new Task(name, new Date(startLong), new Date(endLong), interval, activity);
             } catch (Exception e) {
-                e.printStackTrace();
-            }
+                logger.error("Cannot save changes as repeating task");            }
         }
         // adding created task to the list
         Task delTask = MainController.getList().getTask((MainController.selected));
@@ -198,7 +200,8 @@ public class ViewTaskEdit extends JFrame implements ActionListener {
                 textField_1.setEnabled(false);
                 picker2.setDate(null);
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
         try {
             JXDatePicker action = (JXDatePicker) e.getSource();
@@ -206,7 +209,8 @@ public class ViewTaskEdit extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(new JFrame(), "End set earlier than start!");
                 picker2.setDate(null);
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
 
     // bringing selected task from viewTaskEditList to viewTaskEdit frame
@@ -222,7 +226,11 @@ public class ViewTaskEdit extends JFrame implements ActionListener {
             picker2.setDate(temp.getEndTime());
             repeating.setSelected(true);
             timeSpinner2.setValue(temp.getEndTime());
-            textField_1.setText(String.valueOf(temp.getRepeatInterval()));
+            textField_1.setText(String.valueOf(temp.getRepeatInterval() / 60));
         }
+    }
+
+    public String getMessage(String s) {
+        return s;
     }
 }

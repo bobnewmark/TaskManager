@@ -3,6 +3,7 @@ package controller;
 import model.ArrayTaskList;
 import model.Task;
 import model.TaskIO;
+import org.apache.log4j.Logger;
 import view.ViewNotification;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -11,6 +12,8 @@ import java.io.*;
 import java.util.*;
 
 public class NotifyController extends Thread implements ActionListener {
+
+    private final static Logger logger = Logger.getLogger(NotifyController.class.getClass());
 
     private ViewNotification viewNotification;
     static ArrayTaskList arrayTaskList;
@@ -25,13 +28,13 @@ public class NotifyController extends Thread implements ActionListener {
         if (!snoozeTasks.exists()) try {
             snoozeTasks.createNewFile();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Cannot create \"snoozeTasks.txt\"");
         }
 
         if (!snoozeTime.exists()) try {
             snoozeTime.createNewFile();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Cannot create \"snoozeTime.txt\"");
         }
 
         setDaemon(true);
@@ -55,7 +58,7 @@ public class NotifyController extends Thread implements ActionListener {
             try {
                 sleep(60000);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                logger.info("NotifyController is shutting down");
             }
         }
     }
@@ -222,7 +225,7 @@ public class NotifyController extends Thread implements ActionListener {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Cannot save snoozed tasks into files \"snoozeTime.txt\" and \"snoozeTasks.txt\"");
         }
     }
 
@@ -260,11 +263,11 @@ public class NotifyController extends Thread implements ActionListener {
                     writer = new BufferedWriter(new FileWriter(snoozeTime));
                     writer.write("");
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error("Cannot clear files \"snoozeTime.txt\" and \"snoozeTasks.txt\"");
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Cannot read snoozed tasks from files \"snoozeTime.txt\" and \"snoozeTasks.txt\"");
         }
     }
 }

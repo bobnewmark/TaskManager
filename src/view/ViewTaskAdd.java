@@ -3,6 +3,7 @@ package view;
 import controller.AppController;
 import controller.MainController;
 import model.Task;
+import org.apache.log4j.Logger;
 import org.jdesktop.swingx.JXDatePicker;
 
 import javax.swing.*;
@@ -24,6 +25,9 @@ public class ViewTaskAdd extends JFrame implements ActionListener {
     private JSpinner timeSpinner1;
     private JSpinner timeSpinner2;
     private JCheckBox activeness;
+
+    private final static Logger logger = Logger.getLogger(ViewTaskAdd.class.getClass());
+
 
 
     /**
@@ -158,7 +162,8 @@ public class ViewTaskAdd extends JFrame implements ActionListener {
                 tempTask = new Task(name, new Date(startLong), activity);
 
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("Cannot create non repeating task");
+
             }
             // otherwise task is considered repeated so interval and end time are set
         } else {
@@ -173,7 +178,8 @@ public class ViewTaskAdd extends JFrame implements ActionListener {
                 long endLong = cal1.getTimeInMillis() + picker2.getDate().getTime();
                 tempTask = new Task(name, new Date(startLong), new Date(endLong), interval, activity);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("Cannot create repeating task");
+
             }
         }
         // adding created task to the list
@@ -230,4 +236,6 @@ public class ViewTaskAdd extends JFrame implements ActionListener {
     public boolean isRepeated() {
         return picker2.getDate() != null;
     }
+
+
 }

@@ -4,6 +4,7 @@ import controller.AppController;
 import controller.MainController;
 import model.Task;
 import model.Tasks;
+import org.apache.log4j.Logger;
 import org.jdesktop.swingx.JXDatePicker;
 
 import javax.swing.*;
@@ -23,6 +24,9 @@ public class ViewCalendar extends JFrame implements ActionListener {
     private JXDatePicker picker2;
     private JButton buildButton;
     private JButton backButton;
+
+    private final static Logger logger = Logger.getLogger(ViewCalendar.class.getClass());
+
 
     /**
      * Create the frame.
@@ -104,7 +108,8 @@ public class ViewCalendar extends JFrame implements ActionListener {
                 }
             }
         } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
+            logger.error("Error setting up ViewCalendar");
+
         }
     }
 

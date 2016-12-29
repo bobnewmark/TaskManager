@@ -72,12 +72,14 @@ public class AppController implements ActionListener {
                 viewCalendar.dispose();
                 new ViewTaskList();
             } catch (Exception ignored) {
+                logger.info("Cannot dispose ViewCalendar, as it doesn't exist at the moment");
             }
             // if user clicks 'back' on editin task frame he goes to ViewTaskList as well
             try {
                 viewTaskListEdit.dispose();
                 new ViewTaskList();
             } catch (Exception ignored) {
+                logger.info("Cannot dispose ViewTaskListEdit, as it doesn't exist at the moment");
             }
         }
 
@@ -106,12 +108,14 @@ public class AppController implements ActionListener {
                 viewTaskEdit.dispose();
                 new ViewTaskListEdit();
             } catch (Exception ignored) {
+                logger.info("Cannot dispose ViewTaskEdit, as it doesn't exist at the moment");
             }
             // cancels task adding
             try {
                 viewTaskAdd.dispose();
                 new ViewTaskListEdit();
             } catch (Exception ignored) {
+                logger.info("Cannot dispose ViewTaskAdd, as it doesn't exist at the moment");
             }
         }
 
@@ -141,14 +145,16 @@ public class AppController implements ActionListener {
                 }
                 logger.info("New task was added to the list");
             } catch (Exception ignored) {
+                logger.error("Error adding new task");
             }
-            // returns user from ViewTaskEdit ti ViewTaskListEdit (changes saved)
+            // returns user from ViewTaskEdit to ViewTaskListEdit (changes saved)
             try {
                 viewTaskEdit.editTask();
                 viewTaskEdit.dispose();
                 new ViewTaskListEdit();
                 logger.info("A task was edited");
             } catch (Exception ignored) {
+                logger.error("Error saving changes to task");
             }
         }
         // removes selected task from the list
